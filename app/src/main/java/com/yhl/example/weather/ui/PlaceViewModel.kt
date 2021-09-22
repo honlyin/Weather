@@ -2,14 +2,13 @@ package com.yhl.example.weather.ui
 
 import androidx.lifecycle.*
 import com.yhl.example.weather.LogUtils
-import com.yhl.example.weather.logic.model.response.PlaceResp
 import com.yhl.example.weather.logic.model.response.Place
 import com.yhl.example.weather.logic.network.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PlaceViewModel : ViewModel() {
+class PlaceViewModel : BaseViewModel() {
     companion object {
         private const val TAG = "PlaceViewModel"
     }
@@ -21,11 +20,21 @@ class PlaceViewModel : ViewModel() {
     val placeList = ArrayList<Place>()
 
     fun searchPlaces(query: String) {
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                Repository.searchPlaces(query)
-            }
-            _placeLiveData.value = result.location
-        }
+        lunch(
+                {
+                    val result = withContext(Dispatchers.IO) {
+                        LogUtils.d(TAG, Thread.currentThread().name)
+                        Repository.searchPlaces(query)
+                    }
+                    _placeLiveData.value = result.data
+                },
+                {
+                    LogUtils.e(TAG, it.toString())
+                    errorLiveData.value = it
+                },
+                {
+
+                }
+        )
     }
 }

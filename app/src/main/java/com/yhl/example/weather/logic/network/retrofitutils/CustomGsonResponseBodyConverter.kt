@@ -2,7 +2,7 @@ package com.yhl.example.weather.logic.network.retrofitutils
 
 import com.google.gson.Gson
 import com.google.gson.TypeAdapter
-import com.yhl.example.weather.logic.model.response.PlaceResp
+import com.yhl.example.weather.logic.model.response.PlaceResponse
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import java.io.ByteArrayInputStream
@@ -17,7 +17,7 @@ class CustomGsonResponseBodyConverter<T>(private val gson: Gson, private val ada
 
     override fun convert(value: ResponseBody): T? {
         val response = value.string()
-        val httpStatus = gson.fromJson(response, PlaceResp::class.java)
+        val httpStatus = gson.fromJson(response, PlaceResponse::class.java)
         //验证status返回是否为1
         if (httpStatus.code == 1) {
             value.close()
